@@ -16,3 +16,5 @@
 
 13. In RStudio create "New Project" from "Version Control"
 14. Set "Repository URL" to https://github.com/JacekPardyak/Sota
+
+15. Enjoy!
