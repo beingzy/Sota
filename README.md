@@ -19,5 +19,12 @@
 # For RStudio
 13. In RStudio create "New Project" from "Version Control"
 14. Set "Repository URL" to https://github.com/JacekPardyak/Sota
+15. Select "Tools" >> "Shell..."
+16. Type: 
 
-15. Enjoy!
+```
+git config --global user.email "your_email@example.com"
+```
+```
+git config remote.origin.url git@github.com:JacekPardyak/Sota.git
+```
