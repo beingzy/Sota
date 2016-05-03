@@ -32,7 +32,7 @@ git config remote.origin.url git@github.com:JacekPardyak/Sota.git
 ```
 ## Additional information
 - If you are not willing to wait until your push request is accepted please give your GitHub username/email address to become a contributor
-- There are mainly 3 functionalities you will use in RStudio:
+- There 3, fundamental functionalities which you will use in RStudio:
   + **Pull**, to get recent code from GitHub
   + **Push**, to share your code with others, and
   + **Commit**, to register your changes before **Push**
