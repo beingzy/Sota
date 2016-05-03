@@ -1,5 +1,10 @@
 # SET UP INSTRUCTIONS
-# For RStudio
+This short tutorial introduce the steps to help you accomplish following tasks:
+* Create a GitHub account
+* Setup Git as version control system of RStudio
+* Configure local Git environment with developer information
+
+## For RStudio
 1. First ensure that you have Git installed on your system. Otherwise go to:
  http://git-scm.com/downloads and install it
 2. In RStudio go to "Tools"
@@ -9,22 +14,23 @@
 6. If necessary, enter the path for your Git executable where provided.
 7. If necessary, create your RSA key for SSH.
 
-# For GitHub
+## For GitHub
 8. Register at https://github.com/ if you didn't do it yet.
 9. At github.com go to "View profile and more"
 10. From "Personal settings" list select "SSH and GPG keys"
 11. Choose "New SSH key"
-12. Paste your public key from step 7. and press "Add SSH key"
+12. Paste your public key from **step 7.** and press "Add SSH key"
 
-# For RStudio
+## For RStudio
 13. In RStudio create "New Project" from "Version Control"
 14. Set "Repository URL" to https://github.com/JacekPardyak/Sota
 15. Select "Tools" >> "Shell..."
-16. Type: 
+16. Type:
 
 ```
 git config --global user.email "your_email@example.com"
 ```
+
 ```
 git config remote.origin.url git@github.com:JacekPardyak/Sota.git
 ```
