@@ -26,11 +26,9 @@ This short tutorial introduce the steps to help you accomplish following tasks:
 14. Set "Repository URL" to https://github.com/JacekPardyak/Sota
 15. Select "Tools" >> "Shell..."
 16. Type:
-
 ```
 git config --global user.email "your_email@example.com"
-```
-
-```
 git config remote.origin.url git@github.com:JacekPardyak/Sota.git
 ```
+## Additional information
+- If you are not willing to wait until your pull request is accepted please give your username/email address to become a contributor
