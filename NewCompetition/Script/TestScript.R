@@ -1,3 +1,0 @@
-# 
-library(AlaMaKota)
-library(AKotMaAlę)
