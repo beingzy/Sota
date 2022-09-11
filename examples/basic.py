@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+# start of your script
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -11,7 +12,5 @@ plt.plot(xpoints, ypoints)
 plt.ylabel("Y-axis ")
 plt.xlabel("X-axis ")
 
-image_format = 'svg' # e.g .png, .svg, etc.
-image_name = sys.argv[1]
-
-fig.savefig(image_name, format=image_format, dpi=1200)
+# end of your script
+fig.savefig(sys.argv[1], format='svg', dpi=1200)
