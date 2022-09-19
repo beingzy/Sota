@@ -6,7 +6,19 @@
     <description>Recent content in Posts on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 19 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Sep 2022 21:13:14 -0500</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bunny</title>
+      <link>/2022/09/18/bunny/</link>
+      <pubDate>Sun, 18 Sep 2022 21:13:14 -0500</pubDate>
+      
+      <guid>/2022/09/18/bunny/</guid>
+      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
+You can embed an R code chunk like this:
+See if it works for this 3D plot after we enable the hookvia the chunk option webgl = TRUE:
+#x &amp;lt;- sort(rnorm(1000))#y &amp;lt;- rnorm(1000)#z &amp;lt;- rnorm(1000) + atan2(x,y)#plot3d(x, y, z, col = rainbow(1000))obj &amp;lt;- rgl::readOBJ(&amp;quot;bunny.</description>
+    </item>
+    
     <item>
       <title>Cartoon map of Europe</title>
       <link>/2022/09/19/cartoon-map-of-europe/</link>
