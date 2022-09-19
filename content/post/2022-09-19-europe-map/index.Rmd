@@ -1,5 +1,5 @@
 ---
-title: "europe map"
+title: "Cartoon map of Europe"
 author: "JG Pardyak"
 date: "2022-09-19"
 output: html_document
@@ -9,11 +9,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Motivation
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+I can't draw by hand so I want to draw this map with `R`. https://commons.wikimedia.org/wiki/File:Hand-Drawn_Map_of_Europe.svg 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+![](Hand-Drawn_Map_of_Europe.svg) 
+
+## Entities of Europe 
 
 ```{r }
 library(tidyverse)
@@ -21,7 +23,6 @@ library(sf)
 library(rnaturalearth)
 ```
 
-## Europe entities
 
 We work with all entities falling even partially under any of the various common definitions of Europe, geographical or political. https://en.wikipedia.org/wiki/Europe . 
 Names as used in `rnaturalearth`. 
@@ -43,7 +44,74 @@ europe %>% ggplot() +
   coord_sf(xlim = c(-23, 40), ylim = c(33, 70)) 
 ```
 
-## Neighbours
+## Add colours
+
+```{r}
+library(igraph)
+library(visNetwork)
+json <- jsonlite::fromJSON("neighbours.json")
+json
+```
+
+
+```{r}
+json %>% slice(1)  %>% select(neighbours) %>% 
+    first()
+```
+
+
+```{r}
+
+countries <- json %>% select(country) %>% pull()
+
+neighbours <- tibble()
+for (cnt in countries) {
+  row <- json %>% filter(country == cnt) %>% select(neighbours) %>% pull() %>% 
+    first() %>% mutate(country = cnt)
+  neighbours <- neighbours %>% bind_rows(row)
+}
+
+d <- neighbours %>% select(country, neighbour)
+countries <- union(neighbours %>% select(country)  %>% distinct() %>% pull(),
+                   neighbours %>% select(neighbour)  %>% distinct() %>% pull())
+igraph_network <- graph_from_data_frame(d = d, vertices = countries, directed = F)
+```
+```{r}
+plot(igraph_network)
+```
+```{r}
+E(igraph_network)
+V(igraph_network)
+E(igraph_network)
+igraph_network[]
+diam <- get_diameter(igraph_network, directed=T)
+diam
+```
+```{r}
+# visNetwork
+data <- toVisNetworkData(igraph_network)
+visNetwork(nodes = data$nodes, edges = data$edges, height = "500px")
+
+data$nodes <- greedy_vertex_coloring(
+  igraph_network, 
+  heuristic = c("colored_neighbors")) %>% 
+  tibble(label = names(.),
+       col_id = .) %>%
+  left_join(tibble(col_id = c(1:5),
+                   color = c("#f0e442ff", "#009e73ff", "#d55e00ff", "#0072b2ff", "#44b9bfff"))) %>%
+  select(label, color) %>% mutate(id = label)
+
+
+data$edges <- neighbours %>% rename(from = country, to = neighbour) %>% 
+  mutate_at(c('type'), ~replace_na(., "B"))  %>%
+  left_join(tibble(type = c("B", "M", "L"),
+                   color = c("red", "blue", "green")))
+
+visNetwork(nodes = data$nodes, edges = data$edges, width = "1000px", height = "1000px") %>% 
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
+
+```
+
 
 ## Cartoon map
 

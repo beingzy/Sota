@@ -1,6 +1,6 @@
-baseurl: https://jacekpardyak.github.io/r4fun/
+baseurl: /
 languageCode: en-us
-title: R for fun
+title: A Hugo website
 theme: hugo-lithium
 googleAnalytics: ''
 disqusShortname: ''
@@ -13,8 +13,7 @@ ignoreFiles:
 permalinks:
   post: /:year/:month/:day/:slug/
 menu:
-    - name: Start
-      url: https://jacekpardyak.github.io/r4fun/
+  main:
     - name: About
       url: /about/
     - name: GitHub
