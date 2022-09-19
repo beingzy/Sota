@@ -1,3 +1,0 @@
-- in Windows must be PATH to R\bin specified
-- in Windows batch used
-- 4 spaces in tab for indentation
