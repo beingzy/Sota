@@ -13,7 +13,8 @@ ignoreFiles:
 permalinks:
   post: /:year/:month/:day/:slug/
 menu:
-  main:
+    - name: Start
+      url: https://jacekpardyak.github.io/r4fun/
     - name: About
       url: /about/
     - name: GitHub
