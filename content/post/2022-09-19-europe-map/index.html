@@ -23,7 +23,7 @@ output: html_document
 ## ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
 ## ✔ tibble  3.1.8     ✔ dplyr   1.0.9
 ## ✔ tidyr   1.2.0     ✔ stringr 1.4.1
-## ✔ readr   2.1.2     ✔ forcats 0.5.1
+## ✔ readr   2.1.2     ✔ forcats 0.5.2
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
@@ -165,7 +165,7 @@ igraph_network &lt;- graph_from_data_frame(d = d, vertices = countries, directed
 <pre class="r"><code>plot(igraph_network)</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code>E(igraph_network)</code></pre>
-<pre><code>## + 115/115 edges from e56ba4e (vertex names):
+<pre><code>## + 115/115 edges from 93d2ddb (vertex names):
 ##  [1] Albania--Greece         Albania--Italy          Albania--Montenegro    
 ##  [4] Albania--Macedonia      Albania--Kosovo         Andorra--France        
 ##  [7] Andorra--Spain          Austria--Czech Republic Austria--Germany       
@@ -177,7 +177,7 @@ igraph_network &lt;- graph_from_data_frame(d = d, vertices = countries, directed
 ## [25] Belgium--United Kingdom
 ## + ... omitted several edges</code></pre>
 <pre class="r"><code>V(igraph_network)</code></pre>
-<pre><code>## + 46/46 vertices, named, from e56ba4e:
+<pre><code>## + 46/46 vertices, named, from 93d2ddb:
 ##  [1] Albania                Andorra                Austria               
 ##  [4] Belarus                Belgium                Bosnia and Herzegovina
 ##  [7] Bulgaria               Croatia                Cyprus                
@@ -190,7 +190,7 @@ igraph_network &lt;- graph_from_data_frame(d = d, vertices = countries, directed
 ## [28] Netherlands            Norway                 Poland                
 ## + ... omitted several vertices</code></pre>
 <pre class="r"><code>E(igraph_network)</code></pre>
-<pre><code>## + 115/115 edges from e56ba4e (vertex names):
+<pre><code>## + 115/115 edges from 93d2ddb (vertex names):
 ##  [1] Albania--Greece         Albania--Italy          Albania--Montenegro    
 ##  [4] Albania--Macedonia      Albania--Kosovo         Andorra--France        
 ##  [7] Andorra--Spain          Austria--Czech Republic Austria--Germany       
@@ -300,7 +300,7 @@ igraph_network &lt;- graph_from_data_frame(d = d, vertices = countries, directed
 ## Vatican                . . . . . . . . . . . . . . . . . .</code></pre>
 <pre class="r"><code>diam &lt;- get_diameter(igraph_network, directed=T)
 diam</code></pre>
-<pre><code>## + 7/46 vertices, named, from e56ba4e:
+<pre><code>## + 7/46 vertices, named, from 93d2ddb:
 ## [1] Moldova  Romania  Bulgaria Greece   Italy    Spain    Portugal</code></pre>
 <pre class="r"><code># visNetwork
 data &lt;- toVisNetworkData(igraph_network)
@@ -332,8 +332,8 @@ visNetwork(nodes = data$nodes, edges = data$edges, height = &quot;500px&quot;)</
 europe %&gt;%
   st_geometry() %&gt;%
   st_write(dsn = inx_dxf, driver =&quot;DXF&quot;)</code></pre>
-<pre><code>## Writing layer `inx_46d47e7473f9&#39; to data source 
-##   `C:\Users\jacek\AppData\Local\Temp\RtmpOKZXbD\inx_46d47e7473f9.dxf&#39; using driver `DXF&#39;
+<pre><code>## Writing layer `inx_45e045be5cb3&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\RtmpO2TkwZ\inx_45e045be5cb3.dxf&#39; using driver `DXF&#39;
 ## Writing 77 features with 0 fields and geometry type Multi Polygon.</code></pre>
 <pre class="r"><code># canvas 
 canvas &lt;- matrix(c(-23, 30,
@@ -345,7 +345,7 @@ canvas &lt;- matrix(c(-23, 30,
 europe &lt;- st_read(inx_dxf) %&gt;% select(geometry) %&gt;%
   st_intersection(canvas)</code></pre>
 <pre><code>## Reading layer `entities&#39; from data source 
-##   `C:\Users\jacek\AppData\Local\Temp\RtmpOKZXbD\inx_46d47e7473f9.dxf&#39; 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\RtmpO2TkwZ\inx_45e045be5cb3.dxf&#39; 
 ##   using driver `DXF&#39;
 ## Simple feature collection with 433 features and 6 fields
 ## Geometry type: POLYGON
