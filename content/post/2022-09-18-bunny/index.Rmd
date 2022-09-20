@@ -1,5 +1,5 @@
 ---
-title: "Bunny"
+title: "Coloring the cube"
 author: "JG Pardyak"
 date: 2022-09-18T21:13:14-05:00
 categories: ["R"]
@@ -12,40 +12,55 @@ knitr::opts_chunk$set(collapse = TRUE)
 knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
-# R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-You can embed an R code chunk like this:
+# The rusult
 
 
-```{r}
-
-
-```
-
-See if it works for this 3D plot after we enable the hook
-via the chunk option `webgl = TRUE`:
 
 ```{r, test-rgl, webgl=TRUE}
-#x <- sort(rnorm(1000))
-#y <- rnorm(1000)
-#z <- rnorm(1000) + atan2(x,y)
-#plot3d(x, y, z, col = rainbow(1000))
-obj <- rgl::readOBJ("bunny.obj")
-wire3d(obj)
-```
+by = 10
+sequence <- seq(from = 0, to = 255, by = by)
 
-# Including Plots
+#open3d()
+for (z in c(sequence[1], sequence[length(sequence)])) {
+  for (x in sequence) {
+    for (y in sequence) {
+      colour = c(x, y, z) %>% 
+        as.hexmode() %>% 
+        format(width = 2) %>% 
+        paste(collapse = "") %>%
+        paste0("#", .)
+      #print(colour)
+      shade3d( translate3d( cube3d(col = colour), 2*x/by, 2*y/by, 2*z/by) )
+    }
+  }
+}
 
-You can also embed plots. See Figure \@ref(fig:pie) for example:
+for (x in c(sequence[1], sequence[length(sequence)])) {
+  for (y in sequence) {
+    for (z in sequence[2:(length(sequence) - 1)]) {
+      colour = c(x, y, z) %>% 
+        as.hexmode() %>% 
+        format(width = 2) %>% 
+        paste(collapse = "") %>%
+        paste0("#", .)
+      #print(colour)
+      shade3d( translate3d( cube3d(col = colour), 2*x/by, 2*y/by, 2*z/by) )
+    }
+  }
+}
 
-```{r pie, fig.cap='A fancy pie chart.', tidy=FALSE}
-par(mar = c(0, 1, 0, 1))
-pie(
-  c(280, 60, 20),
-  c('Sky', 'Sunny side of pyramid', 'Shady side of pyramid'),
-  col = c('#0292D8', '#F7EA39', '#C4B632'),
-  init.angle = -50, border = NA
-)
+for (y in c(sequence[1], sequence[length(sequence)])) {
+  for (x in sequence[2:(length(sequence) - 1)]) {
+    for (z in sequence[2:(length(sequence) - 1)]) {
+      colour = c(x, y, z) %>% 
+        as.hexmode() %>% 
+        format(width = 2) %>% 
+        paste(collapse = "") %>%
+        paste0("#", .)
+      #print(colour)
+      shade3d( translate3d( cube3d(col = colour), 2*x/by, 2*y/by, 2*z/by) )
+    }
+  }
+}
+
 ```
