@@ -48,3 +48,4 @@ for(x in sequence){
   }
 }
 
+# dokończę w domu
