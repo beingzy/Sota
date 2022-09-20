@@ -1,0 +1,98 @@
+# map
+library(tidyverse)
+library(sf)
+library(rnaturalearth)
+
+sovereignties <- c(
+  "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium",
+  "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", 
+  "Denmark", "Estonia", "Finland", "France", "Georgia", "Germany", "Greece", 
+  "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", 
+  "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", "Malta", "Moldova",
+  "Monaco", "Montenegro", "Netherlands", "Norway", "Poland", "Portugal",
+  "Republic of Serbia", "Romania", "Russia", "San Marino", "Slovakia", "Slovenia",
+  "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Vatican")
+
+europe <- ne_countries(scale = "medium", returnclass = "sf", sovereignty = sovereignties) %>%
+  select(sovereignt) #%>% mutate(sovereignt = ifelse(sovereignt == "Kosovo", "Republic of Serbia", sovereignt))
+# natural map
+europe %>% ggplot() +
+  geom_sf() +
+  coord_sf(xlim = c(-23, 40), ylim = c(33, 70)) 
+
+result <- st_sfc() %>% st_sf()
+for (sovereignty in sovereignties) {
+  inx_dxf <- tempfile("inx_", fileext = c(".dxf"))
+  europe %>% filter(sovereignt == sovereignty) %>%
+    st_geometry() %>%
+    st_write(dsn = inx_dxf, driver ="DXF")
+  row <- st_read(inx_dxf) %>% select(geometry) %>% st_union() %>% st_sfc() %>% 
+    st_sf() %>% mutate(sovereignt = sovereignty)
+  result <- result %>% bind_rows(row)
+}
+
+canvas <- matrix(c(-23, 33,
+                   -23, 71,
+                   50, 71,
+                   50, 33,
+                   -23, 33),ncol=2, byrow=TRUE) %>%
+  list() %>% st_polygon() %>% st_sfc() %>% st_sf()
+
+result <- result %>%
+  st_intersection(canvas)
+
+result <- result %>% 
+  mutate(geometry = st_buffer(geometry, dist = -.1)) %>%
+  mutate(geometry = st_simplify(geometry)) %>%
+  mutate(area = st_area(geometry)) #%>%  filter(area > 0.1)
+
+result %>% ggplot() +
+  geom_sf()  
+# canvas 
+setdiff(sovereignties, result$sovereignt)
+
+# network
+sovereignties
+
+library(igraph)
+library(visNetwork)
+json <- jsonlite::fromJSON("./content/post/2022-09-19-europe-map/neighbours.json")
+json
+
+countries <- json %>% select(country) %>% pull()
+
+neighbours <- tibble()
+for (cnt in countries) {
+  row <- json %>% filter(country == cnt) %>% select(neighbours) %>% pull() %>% 
+    first() %>% mutate(country = cnt)
+  neighbours <- neighbours %>% bind_rows(row)
+}
+
+d <- neighbours %>% select(country, neighbour)
+countries <- union(neighbours %>% select(country)  %>% distinct() %>% pull(),
+                   neighbours %>% select(neighbour)  %>% distinct() %>% pull())
+igraph_network <- graph_from_data_frame(d = d, vertices = countries, directed = F)
+
+plot(igraph_network)
+
+data <- toVisNetworkData(igraph_network)
+visNetwork(nodes = data$nodes, edges = data$edges, height = "500px")
+
+data$nodes <- greedy_vertex_coloring(
+  igraph_network, 
+  heuristic = c("colored_neighbors")) %>% 
+  tibble(label = names(.),
+         col_id = .) %>%
+  left_join(tibble(col_id = c(1:5),
+                   color = c("#f0e442ff", "#009e73ff", "#d55e00ff", "#0072b2ff", "#44b9bfff"))) %>%
+  select(label, color) %>% mutate(id = label)
+
+
+data$edges <- neighbours %>% rename(from = country, to = neighbour) %>% 
+  mutate_at(c('type'), ~replace_na(., "B"))  %>%
+  left_join(tibble(type = c("B", "M", "L"),
+                   color = c("red", "blue", "green")))
+
+visNetwork(nodes = data$nodes, edges = data$edges, width = "1000px", height = "1000px") %>% 
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
+
