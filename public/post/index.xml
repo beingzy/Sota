@@ -8,15 +8,12 @@
     <language>en-us</language>
     <lastBuildDate>Sun, 18 Sep 2022 21:13:14 -0500</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Bunny</title>
-      <link>/2022/09/18/bunny/</link>
+      <title>Coloring the cube</title>
+      <link>/2022/09/18/coloring-the-cube/</link>
       <pubDate>Sun, 18 Sep 2022 21:13:14 -0500</pubDate>
       
-      <guid>/2022/09/18/bunny/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-See if it works for this 3D plot after we enable the hookvia the chunk option webgl = TRUE:
-#x &amp;lt;- sort(rnorm(1000))#y &amp;lt;- rnorm(1000)#z &amp;lt;- rnorm(1000) + atan2(x,y)#plot3d(x, y, z, col = rainbow(1000))obj &amp;lt;- rgl::readOBJ(&amp;quot;bunny.</description>
+      <guid>/2022/09/18/coloring-the-cube/</guid>
+      <description>The rusultby = 15sequence &amp;lt;- seq(from = 0, to = 255, by = by)#open3d()for (z in c(sequence[1], sequence[length(sequence)])) {for (x in sequence) {for (y in sequence) {colour = c(x, y, z) %&amp;gt;% as.hexmode() %&amp;gt;% format(width = 2) %&amp;gt;% paste(collapse = &amp;quot;&amp;quot;) %&amp;gt;%paste0(&amp;quot;#&amp;quot;, .)#print(colour)shade3d( translate3d( cube3d(col = colour), 2*x/by, 2*y/by, 2*z/by) )}}}for (x in c(sequence[1], sequence[length(sequence)])) {for (y in sequence) {for (z in sequence[2:(length(sequence) - 1)]) {colour = c(x, y, z) %&amp;gt;% as.</description>
     </item>
     
     <item>
@@ -25,8 +22,8 @@ See if it works for this 3D plot after we enable the hookvia the chunk option w
       <pubDate>Mon, 19 Sep 2022 00:00:00 +0000</pubDate>
       
       <guid>/2022/09/19/cartoon-map-of-europe/</guid>
-      <description>MotivationI can’t draw by hand so I want to draw this map with R. https://commons.wikimedia.org/wiki/File:Hand-Drawn_Map_of_Europe.svg
-Entities of Europelibrary(tidyverse)## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──## ✔ ggplot2 3.3.6 ✔ purrr 0.3.4## ✔ tibble 3.1.8 ✔ dplyr 1.0.9## ✔ tidyr 1.2.0 ✔ stringr 1.4.1## ✔ readr 2.1.2 ✔ forcats 0.5.1## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──## ✖ dplyr::filter() masks stats::filter()## ✖ dplyr::lag() masks stats::lag()library(sf)## Linking to GEOS 3.</description>
+      <description>MotivationI can’t draw by hand but I want to draw map like this with R. https://commons.wikimedia.org/wiki/File:Hand-Drawn_Map_of_Europe.svg
+Entities of Europe# maplibrary(tidyverse)## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──## ✔ ggplot2 3.3.6 ✔ purrr 0.3.4## ✔ tibble 3.1.8 ✔ dplyr 1.0.9## ✔ tidyr 1.2.0 ✔ stringr 1.4.1## ✔ readr 2.1.2 ✔ forcats 0.5.2## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──## ✖ dplyr::filter() masks stats::filter()## ✖ dplyr::lag() masks stats::lag()library(sf)## Linking to GEOS 3.</description>
     </item>
     
     <item>
