@@ -62,7 +62,7 @@
 
   <article class="article">
     
-    <span class="article-duration">18 min read</span>
+    <span class="article-duration">23 min read</span>
     
 
     <h1 class="article-title">Cartoon map of Europe</h1>
@@ -81,56 +81,689 @@
 
 <div id="motivation" class="section level2">
 <h2>Motivation</h2>
-<p>I can’t draw by hand so I want to draw this map with <code>R</code>. <a href="https://commons.wikimedia.org/wiki/File:Hand-Drawn_Map_of_Europe.svg" class="uri">https://commons.wikimedia.org/wiki/File:Hand-Drawn_Map_of_Europe.svg</a></p>
+<p>I can’t draw by hand but I want to draw map like this with <code>R</code>. <a href="https://commons.wikimedia.org/wiki/File:Hand-Drawn_Map_of_Europe.svg" class="uri">https://commons.wikimedia.org/wiki/File:Hand-Drawn_Map_of_Europe.svg</a></p>
 <p><img src="Hand-Drawn_Map_of_Europe.svg" /></p>
 </div>
 <div id="entities-of-europe" class="section level2">
 <h2>Entities of Europe</h2>
-<pre class="r"><code>library(tidyverse)</code></pre>
+<pre class="r"><code># map
+library(tidyverse)</code></pre>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
 ## ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
 ## ✔ tibble  3.1.8     ✔ dplyr   1.0.9
 ## ✔ tidyr   1.2.0     ✔ stringr 1.4.1
-## ✔ readr   2.1.2     ✔ forcats 0.5.1
+## ✔ readr   2.1.2     ✔ forcats 0.5.2
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(sf)</code></pre>
 <pre><code>## Linking to GEOS 3.9.1, GDAL 3.4.3, PROJ 7.2.1; sf_use_s2() is TRUE</code></pre>
-<pre class="r"><code>library(rnaturalearth)</code></pre>
-<p>We work with all entities falling even partially under any of the various common definitions of Europe, geographical or political. <a href="https://en.wikipedia.org/wiki/Europe" class="uri">https://en.wikipedia.org/wiki/Europe</a> .
-Names as used in <code>rnaturalearth</code>.</p>
-<pre class="r"><code>sovereignties &lt;- c(
-&quot;Albania&quot;, &quot;Andorra&quot;, &quot;Armenia&quot;, &quot;Austria&quot;, &quot;Azerbaijan&quot;, &quot;Belarus&quot;, &quot;Belgium&quot;, &quot;Bosnia and Herzegovina&quot;, &quot;Bulgaria&quot;, &quot;Croatia&quot;, &quot;Cyprus&quot;, &quot;Czech Republic&quot;, &quot;Denmark&quot;, &quot;Estonia&quot;, &quot;Finland&quot;, &quot;France&quot;, &quot;Georgia&quot;, &quot;Germany&quot;, &quot;Greece&quot;, &quot;Hungary&quot;, &quot;Iceland&quot;, &quot;Ireland&quot;, &quot;Italy&quot;, &quot;Kazakhstan&quot;, &quot;Latvia&quot;, &quot;Liechtenstein&quot;, &quot;Lithuania&quot;, &quot;Luxembourg&quot;, &quot;Macedonia&quot;, &quot;Malta&quot;, &quot;Moldova&quot;, &quot;Monaco&quot;, &quot;Montenegro&quot;, &quot;Netherlands&quot;, &quot;Norway&quot;, &quot;Poland&quot;, &quot;Portugal&quot;, &quot;Republic of Serbia&quot;, &quot;Romania&quot;, &quot;Russia&quot;, &quot;San Marino&quot;, &quot;Slovakia&quot;, &quot;Slovenia&quot;, &quot;Spain&quot;, &quot;Sweden&quot;, &quot;Switzerland&quot;, &quot;Turkey&quot;, &quot;Ukraine&quot;, &quot;United Kingdom&quot;, &quot;Vatican&quot;)
+<pre class="r"><code>library(rnaturalearth)
+
+sovereignties &lt;- c(
+  &quot;Albania&quot;, &quot;Andorra&quot;, &quot;Armenia&quot;, &quot;Austria&quot;, &quot;Azerbaijan&quot;, &quot;Belarus&quot;, &quot;Belgium&quot;,
+  &quot;Bosnia and Herzegovina&quot;, &quot;Bulgaria&quot;, &quot;Croatia&quot;, &quot;Cyprus&quot;, &quot;Czech Republic&quot;, 
+  &quot;Denmark&quot;, &quot;Estonia&quot;, &quot;Finland&quot;, &quot;France&quot;, &quot;Georgia&quot;, &quot;Germany&quot;, &quot;Greece&quot;, 
+  &quot;Hungary&quot;, &quot;Iceland&quot;, &quot;Ireland&quot;, &quot;Italy&quot;, &quot;Kazakhstan&quot;, &quot;Kosovo&quot;, &quot;Latvia&quot;, 
+  &quot;Liechtenstein&quot;, &quot;Lithuania&quot;, &quot;Luxembourg&quot;, &quot;Macedonia&quot;, &quot;Malta&quot;, &quot;Moldova&quot;,
+  &quot;Monaco&quot;, &quot;Montenegro&quot;, &quot;Netherlands&quot;, &quot;Norway&quot;, &quot;Poland&quot;, &quot;Portugal&quot;,
+  &quot;Republic of Serbia&quot;, &quot;Romania&quot;, &quot;Russia&quot;, &quot;San Marino&quot;, &quot;Slovakia&quot;, &quot;Slovenia&quot;,
+  &quot;Spain&quot;, &quot;Sweden&quot;, &quot;Switzerland&quot;, &quot;Turkey&quot;, &quot;Ukraine&quot;, &quot;United Kingdom&quot;, &quot;Vatican&quot;)
 
 europe &lt;- ne_countries(scale = &quot;medium&quot;, returnclass = &quot;sf&quot;, sovereignty = sovereignties) %&gt;%
-    select(sovereignt)</code></pre>
-<pre class="r"><code>europe %&gt;% ggplot() +
+  select(sovereignt)
+# natural map
+europe %&gt;% ggplot() +
   geom_sf() +
   coord_sf(xlim = c(-23, 40), ylim = c(33, 70)) </code></pre>
-<p><img src="/2022/09/19/cartoon-map-of-europe/index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-</div>
-<div id="add-colours" class="section level2">
-<h2>Add colours</h2>
+<p><img src="/2022/09/19/cartoon-map-of-europe/index_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code># to make negative offset we need to drop Coordinate System and clear the geometries
+
+result &lt;- st_sfc() %&gt;% st_sf()
+for (sovereignty in sovereignties) {
+  inx_dxf &lt;- tempfile(&quot;inx_&quot;, fileext = c(&quot;.dxf&quot;))
+  europe %&gt;% filter(sovereignt == sovereignty) %&gt;%
+    st_geometry() %&gt;%
+    st_write(dsn = inx_dxf, driver =&quot;DXF&quot;)
+  row &lt;- st_read(inx_dxf) %&gt;% select(geometry) %&gt;% st_union() %&gt;% st_sfc() %&gt;% 
+    st_sf() %&gt;% mutate(sovereignt = sovereignty)
+  result &lt;- result %&gt;% bind_rows(row)
+}</code></pre>
+<pre><code>## Writing layer `inx_72c6efbce0&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c6efbce0.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c6efbce0.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 19.28066 ymin: 39.65352 xmax: 21.03105 ymax: 42.64795
+## CRS:           NA
+## Writing layer `inx_72c74866e6b&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c74866e6b.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c74866e6b.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 1.414844 ymin: 42.43447 xmax: 1.740234 ymax: 42.64272
+## CRS:           NA
+## Writing layer `inx_72c23f133e2&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c23f133e2.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c23f133e2.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 2 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 43.43945 ymin: 38.86904 xmax: 46.58477 ymax: 41.29097
+## CRS:           NA
+## Writing layer `inx_72c4d41fcc&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c4d41fcc.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c4d41fcc.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 9.524023 ymin: 46.39971 xmax: 17.14736 ymax: 49.00112
+## CRS:           NA
+## Writing layer `inx_72c48155e1&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c48155e1.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c48155e1.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 3 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 44.76826 ymin: 38.39873 xmax: 50.36592 ymax: 41.89097
+## CRS:           NA
+## Writing layer `inx_72cb736cba&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72cb736cba.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72cb736cba.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 23.1751 ymin: 51.26504 xmax: 32.71025 ymax: 56.1458
+## CRS:           NA
+## Writing layer `inx_72c7b2b4e0b&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c7b2b4e0b.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c7b2b4e0b.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 2.524902 ymin: 49.51089 xmax: 6.364453 ymax: 51.49111
+## CRS:           NA
+## Writing layer `inx_72c400a6181&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c400a6181.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c400a6181.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 15.73662 ymin: 42.55972 xmax: 19.58379 ymax: 45.27656
+## CRS:           NA
+## Writing layer `inx_72c3ee91fbe&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c3ee91fbe.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c3ee91fbe.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 22.34404 ymin: 41.24355 xmax: 28.58535 ymax: 44.23779
+## CRS:           NA
+## Writing layer `inx_72c647a5607&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c647a5607.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c647a5607.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 13 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 13.51719 ymin: 42.43291 xmax: 19.40098 ymax: 46.53462
+## CRS:           NA
+## Writing layer `inx_72ccbf68a7&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72ccbf68a7.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72ccbf68a7.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 32.30098 ymin: 34.56958 xmax: 34.0502 ymax: 35.18267
+## CRS:           NA
+## Writing layer `inx_72c6b12110c&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c6b12110c.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c6b12110c.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 12.08975 ymin: 48.57622 xmax: 18.83223 ymax: 51.03779
+## CRS:           NA
+## Writing layer `inx_72c1f943e2b&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c1f943e2b.dxf&#39; using driver `DXF&#39;
+## Writing 3 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c1f943e2b.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 34 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -72.81807 ymin: 54.62886 xmax: 15.13711 ymax: 83.59961
+## CRS:           NA
+## Writing layer `inx_72c4d0330b0&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c4d0330b0.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c4d0330b0.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 4 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 21.85449 ymin: 57.52549 xmax: 28.15107 ymax: 59.63901
+## CRS:           NA
+## Writing layer `inx_72c5a407a05&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c5a407a05.dxf&#39; using driver `DXF&#39;
+## Writing 2 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c5a407a05.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 11 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 19.51904 ymin: 59.81602 xmax: 31.53652 ymax: 70.06484
+## CRS:           NA
+## Writing layer `inx_72c25137c36&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c25137c36.dxf&#39; using driver `DXF&#39;
+## Writing 8 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c25137c36.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 46 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -178.1944 ymin: -49.70986 xmax: 168.1391 ymax: 51.09712
+## CRS:           NA
+## Writing layer `inx_72c57e63a31&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c57e63a31.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c57e63a31.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 39.97832 ymin: 41.07021 xmax: 46.67256 ymax: 43.56978
+## CRS:           NA
+## Writing layer `inx_72c6295307&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c6295307.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c6295307.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 6 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 5.85752 ymin: 47.27881 xmax: 15.0166 ymax: 55.05874
+## CRS:           NA
+## Writing layer `inx_72c56841809&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c56841809.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c56841809.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 40 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 19.64648 ymin: 34.93447 xmax: 28.23184 ymax: 41.7438
+## CRS:           NA
+## Writing layer `inx_72c28982cfa&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c28982cfa.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c28982cfa.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 16.09307 ymin: 45.75303 xmax: 22.87666 ymax: 48.55347
+## CRS:           NA
+## Writing layer `inx_72c2fc85aaf&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c2fc85aaf.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c2fc85aaf.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -24.47568 ymin: 63.40669 xmax: -13.5561 ymax: 66.52607
+## CRS:           NA
+## Writing layer `inx_72c2d5f1fd2&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c2d5f1fd2.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c2d5f1fd2.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 2 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -10.39023 ymin: 51.47373 xmax: -6.027393 ymax: 55.36582
+## CRS:           NA
+## Writing layer `inx_72c542628aa&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c542628aa.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c542628aa.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 8 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 6.627734 ymin: 36.68784 xmax: 18.48584 ymax: 47.08213
+## CRS:           NA
+## Writing layer `inx_72c2e111e09&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c2e111e09.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c2e111e09.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 4 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 46.60918 ymin: 40.60864 xmax: 87.32285 ymax: 55.3896
+## CRS:           NA
+## Writing layer `inx_72c7c277cd4&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c7c277cd4.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c7c277cd4.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 20.02949 ymin: 41.85381 xmax: 21.75293 ymax: 43.26108
+## CRS:           NA
+## Writing layer `inx_72c4ab242cc&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c4ab242cc.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c4ab242cc.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 21.01494 ymin: 55.66753 xmax: 28.20205 ymax: 58.06343
+## CRS:           NA
+## Writing layer `inx_72c4046273&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c4046273.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c4046273.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 9.479492 ymin: 47.05737 xmax: 9.610547 ymax: 47.27075
+## CRS:           NA
+## Writing layer `inx_72c5e523f46&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c5e523f46.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c5e523f46.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 2 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 20.8998 ymin: 53.89297 xmax: 26.77568 ymax: 56.41118
+## CRS:           NA
+## Writing layer `inx_72c25733ca6&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c25733ca6.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c25733ca6.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 5.725 ymin: 49.44546 xmax: 6.49375 ymax: 50.16719
+## CRS:           NA
+## Writing layer `inx_72c27847d21&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c27847d21.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c27847d21.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 20.44863 ymin: 40.8499 xmax: 23.00566 ymax: 42.35815
+## CRS:           NA
+## Writing layer `inx_72c3c11d03&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c3c11d03.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c3c11d03.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 2 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 14.18037 ymin: 35.82021 xmax: 14.56621 ymax: 36.07578
+## CRS:           NA
+## Writing layer `inx_72c55124a4a&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c55124a4a.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c55124a4a.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 26.61895 ymin: 45.45044 xmax: 30.13105 ymax: 48.47773
+## CRS:           NA
+## Writing layer `inx_72c3e216d7e&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c3e216d7e.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c3e216d7e.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 7.377734 ymin: 43.73174 xmax: 7.438672 ymax: 43.7709
+## CRS:           NA
+## Writing layer `inx_72c4aef71f5&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c4aef71f5.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c4aef71f5.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 18.43633 ymin: 41.86909 xmax: 20.34766 ymax: 43.54233
+## CRS:           NA
+## Writing layer `inx_72c7c44718c&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c7c44718c.dxf&#39; using driver `DXF&#39;
+## Writing 4 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c7c44718c.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 15 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -70.06611 ymin: 12.03208 xmax: 7.197266 ymax: 53.62549
+## CRS:           NA
+## Writing layer `inx_72c336d66e2&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c336d66e2.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c336d66e2.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 32 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -9.098877 ymin: 58.02095 xmax: 33.6293 ymax: 80.47783
+## CRS:           NA
+## Writing layer `inx_72c29296289&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c29296289.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c29296289.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 14.12861 ymin: 49.02075 xmax: 24.10576 ymax: 54.83818
+## CRS:           NA
+## Writing layer `inx_72c30b062de&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c30b062de.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c30b062de.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 9 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -31.28296 ymin: 32.64829 xmax: -6.2125 ymax: 42.1374
+## CRS:           NA
+## Writing layer `inx_72c50372b57&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c50372b57.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c50372b57.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 18.83906 ymin: 42.24214 xmax: 22.97686 ymax: 46.16919
+## CRS:           NA
+## Writing layer `inx_72c42631f8c&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c42631f8c.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c42631f8c.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 20.2418 ymin: 43.6708 xmax: 29.70586 ymax: 48.26348
+## CRS:           NA
+## Writing layer `inx_72c5089749&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c5089749.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c5089749.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 100 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -180 ymin: 41.19927 xmax: 180 ymax: 81.8542
+## CRS:           NA
+## Writing layer `inx_72c33a9c65&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c33a9c65.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c33a9c65.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 12.39688 ymin: 43.89409 xmax: 12.51465 ymax: 43.98975
+## CRS:           NA
+## Writing layer `inx_72c5a8983f&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c5a8983f.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c5a8983f.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 16.8627 ymin: 47.76343 xmax: 22.53867 ymax: 49.59771
+## CRS:           NA
+## Writing layer `inx_72c255725fe&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c255725fe.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c255725fe.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 13.37822 ymin: 45.42837 xmax: 16.51621 ymax: 46.86328
+## CRS:           NA
+## Writing layer `inx_72c6bc04812&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c6bc04812.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c6bc04812.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 12 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -18.16055 ymin: 27.64639 xmax: 4.32207 ymax: 43.76455
+## CRS:           NA
+## Writing layer `inx_72c8605289&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c8605289.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c8605289.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 6 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 11.14717 ymin: 55.34639 xmax: 24.15547 ymax: 69.03687
+## CRS:           NA
+## Writing layer `inx_72c3cec4932&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c3cec4932.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c3cec4932.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 5.97002 ymin: 45.83003 xmax: 10.45459 ymax: 47.77563
+## CRS:           NA
+## Writing layer `inx_72c1c91679f&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c1c91679f.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c1c91679f.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 3 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 25.66895 ymin: 35.83145 xmax: 44.81719 ymax: 42.09326
+## CRS:           NA
+## Writing layer `inx_72c56534a8d&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c56534a8d.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c56534a8d.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 2 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 22.13184 ymin: 44.3876 xmax: 40.12832 ymax: 52.35356
+## CRS:           NA
+## Writing layer `inx_72c477e3d3d&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c477e3d3d.dxf&#39; using driver `DXF&#39;
+## Writing 15 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c477e3d3d.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 50 features and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -128.3502 ymin: -58.49229 xmax: 72.49854 ymax: 60.83188
+## CRS:           NA
+## Writing layer `inx_72c3e5812b3&#39; to data source 
+##   `C:\Users\JACEKP~1\AppData\Local\Temp\Rtmpo5imLg\inx_72c3e5812b3.dxf&#39; using driver `DXF&#39;
+## Writing 1 features with 0 fields and geometry type Multi Polygon.
+## Reading layer `entities&#39; from data source 
+##   `C:\Users\Jacek Pardyak\AppData\Local\Temp\Rtmpo5imLg\inx_72c3e5812b3.dxf&#39; 
+##   using driver `DXF&#39;
+## Simple feature collection with 1 feature and 6 fields
+## Geometry type: POLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 12.42754 ymin: 41.89756 xmax: 12.43916 ymax: 41.9062
+## CRS:           NA</code></pre>
+<pre class="r"><code>row &lt;- result %&gt;% filter(sovereignt %in% c(&quot;Kosovo&quot;, &quot;Republic of Serbia&quot;)) %&gt;% st_union() %&gt;%
+  st_cast(&quot;LINESTRING&quot;) %&gt;% nth(1) %&gt;% 
+  st_polygonize() %&gt;% first() %&gt;% st_sfc() %&gt;% st_sf() %&gt;% mutate(sovereignt = &quot;Republic of Serbia&quot;) 
+
+result &lt;- result %&gt;% filter(!sovereignt %in% c(&quot;Kosovo&quot;, &quot;Republic of Serbia&quot;)) %&gt;% bind_rows(row)
+
+# we crop the map
+row &lt;- matrix(c(-23, 33,
+                   -23, 71,
+                   50, 71,
+                   50, 33,
+                   -23, 33),ncol=2, byrow=TRUE) %&gt;%
+  list() %&gt;% st_polygon() %&gt;% st_sfc() %&gt;% st_sf()
+
+result &lt;- result %&gt;%
+  st_intersection(row)</code></pre>
+<pre><code>## Warning: attribute variables are assumed to be spatially constant throughout all
+## geometries</code></pre>
+<pre class="r"><code>result %&gt;% 
+  ggplot() +
+  geom_sf() </code></pre>
+<p><img src="/2022/09/19/cartoon-map-of-europe/index_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre class="r"><code># try buffer
+result &lt;- result %&gt;% mutate(geometry = st_buffer(geometry, dist = -.1)) %&gt;%
+  mutate(geometry = st_simplify(geometry)) %&gt;%
+  mutate(area = st_area(geometry)) %&gt;%
+  filter(area &gt; 0.1) 
+result %&gt;% ggplot() +
+  geom_sf() </code></pre>
+<p><img src="/2022/09/19/cartoon-map-of-europe/index_files/figure-html/unnamed-chunk-1-3.png" width="672" /></p>
+<pre class="r"><code># network
+sovereignties</code></pre>
+<pre><code>##  [1] &quot;Albania&quot;                &quot;Andorra&quot;                &quot;Armenia&quot;               
+##  [4] &quot;Austria&quot;                &quot;Azerbaijan&quot;             &quot;Belarus&quot;               
+##  [7] &quot;Belgium&quot;                &quot;Bosnia and Herzegovina&quot; &quot;Bulgaria&quot;              
+## [10] &quot;Croatia&quot;                &quot;Cyprus&quot;                 &quot;Czech Republic&quot;        
+## [13] &quot;Denmark&quot;                &quot;Estonia&quot;                &quot;Finland&quot;               
+## [16] &quot;France&quot;                 &quot;Georgia&quot;                &quot;Germany&quot;               
+## [19] &quot;Greece&quot;                 &quot;Hungary&quot;                &quot;Iceland&quot;               
+## [22] &quot;Ireland&quot;                &quot;Italy&quot;                  &quot;Kazakhstan&quot;            
+## [25] &quot;Kosovo&quot;                 &quot;Latvia&quot;                 &quot;Liechtenstein&quot;         
+## [28] &quot;Lithuania&quot;              &quot;Luxembourg&quot;             &quot;Macedonia&quot;             
+## [31] &quot;Malta&quot;                  &quot;Moldova&quot;                &quot;Monaco&quot;                
+## [34] &quot;Montenegro&quot;             &quot;Netherlands&quot;            &quot;Norway&quot;                
+## [37] &quot;Poland&quot;                 &quot;Portugal&quot;               &quot;Republic of Serbia&quot;    
+## [40] &quot;Romania&quot;                &quot;Russia&quot;                 &quot;San Marino&quot;            
+## [43] &quot;Slovakia&quot;               &quot;Slovenia&quot;               &quot;Spain&quot;                 
+## [46] &quot;Sweden&quot;                 &quot;Switzerland&quot;            &quot;Turkey&quot;                
+## [49] &quot;Ukraine&quot;                &quot;United Kingdom&quot;         &quot;Vatican&quot;</code></pre>
 <pre class="r"><code>library(igraph)</code></pre>
 <pre><code>## 
-## Attaching package: &#39;igraph&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## Attaching package: &#39;igraph&#39;
 ## 
-##     as_data_frame, groups, union</code></pre>
-<pre><code>## The following objects are masked from &#39;package:purrr&#39;:
+## The following objects are masked from &#39;package:dplyr&#39;:
 ## 
-##     compose, simplify</code></pre>
-<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+##     as_data_frame, groups, union
 ## 
-##     crossing</code></pre>
-<pre><code>## The following object is masked from &#39;package:tibble&#39;:
+## The following objects are masked from &#39;package:purrr&#39;:
 ## 
-##     as_data_frame</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+##     compose, simplify
 ## 
-##     decompose, spectrum</code></pre>
-<pre><code>## The following object is masked from &#39;package:base&#39;:
+## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     crossing
+## 
+## The following object is masked from &#39;package:tibble&#39;:
+## 
+##     as_data_frame
+## 
+## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     decompose, spectrum
+## 
+## The following object is masked from &#39;package:base&#39;:
 ## 
 ##     union</code></pre>
 <pre class="r"><code>library(visNetwork)
@@ -139,84 +772,81 @@ json</code></pre>
 <pre><code>##                   country
 ## 1                 Albania
 ## 2                 Andorra
-## 3                 Austria
-## 4                 Belarus
-## 5                 Belgium
-## 6  Bosnia and Herzegovina
-## 7                Bulgaria
-## 8                 Croatia
-## 9                  Cyprus
-## 10         Czech Republic
-## 11                Denmark
-## 12                Estonia
-## 13                Finland
-## 14                 France
-## 15                Germany
-## 16                 Greece
-## 17                Hungary
-## 18                Iceland
-## 19                Ireland
-## 20                  Italy
-## 21                 Kosovo
-## 22                 Latvia
-## 23          Liechtenstein
-## 24              Lithuania
-## 25              Macedonia
-## 26                Moldova
-## 27             Montenegro
-## 28            Netherlands
-## 29                 Norway
-## 30                 Poland
-## 31               Portugal
-## 32     Republic of Serbia
-## 33                Romania
-## 34                 Russia
-## 35               Slovakia
+## 3                 Armenia
+## 4                 Austria
+## 5              Azerbaijan
+## 6                 Belarus
+## 7                 Belgium
+## 8  Bosnia and Herzegovina
+## 9                Bulgaria
+## 10                Croatia
+## 11                 Cyprus
+## 12         Czech Republic
+## 13                Denmark
+## 14                Estonia
+## 15                Finland
+## 16                 France
+## 17                Georgia
+## 18                Germany
+## 19                 Greece
+## 20                Hungary
+## 21                Iceland
+## 22                Ireland
+## 23                  Italy
+## 24             Kazakhstan
+## 25                 Latvia
+## 26          Liechtenstein
+## 27              Lithuania
+## 28              Macedonia
+## 29                Moldova
+## 30             Montenegro
+## 31            Netherlands
+## 32                 Norway
+## 33                 Poland
+## 34               Portugal
+## 35     Republic of Serbia
+## 36                Romania
+## 37                 Russia
+## 38               Slovakia
 ##                                                                                                         neighbours
-## 1                                                    Greece, Italy, Montenegro, Macedonia, Kosovo, NA, M, NA, L, L
+## 1                                        Greece, Italy, Montenegro, Macedonia, Republic of Serbia, NA, M, NA, L, L
 ## 2                                                                                              France, Spain, L, L
-## 3  Czech Republic, Germany, Hungary, Italy, Liechtenstein, Slovakia, Slovenia, Switzerland, L, L, L, L, L, L, L, L
-## 4                                                        Latvia, Lithuania, Poland, Russia, Ukraine, L, L, L, L, L
-## 5                                        France, Germany, Luxembourg, Netherlands, United Kingdom, NA, L, L, NA, M
-## 6                                                                Croatia, Montenegro, Republic of Serbia, NA, L, L
-## 7                               Greece, Macedonia, Romania, Republic of Serbia, Russia, Ukraine, L, L, NA, L, M, M
-## 8                                        Hungary, Italy, Montenegro, Republic of Serbia, Slovenia, L, M, NA, L, NA
-## 9                                                                                                        Greece, M
-## 10                                                                              Germany, Poland, Slovakia, L, L, L
-## 11                                                 Germany, Norway, Poland, Sweden, United Kingdom, NA, M, M, M, M
-## 12                                                                   Finland, Latvia, Russia, Sweden, M, NA, NA, M
-## 13                                                                               Norway, Russia, Sweden, L, NA, NA
-## 14                  Germany, Italy, Luxembourg, Monaco, Spain, Switzerland, United Kingdom, L, NA, L, NA, NA, L, M
-## 15                        Luxembourg, Netherlands, Poland, Sweden, Switzerland, United Kingdom, L, NA, NA, M, L, M
-## 16                                                                                          Italy, Macedonia, M, L
-## 17                                         Romania, Republic of Serbia, Slovakia, Slovenia, Ukraine, L, L, L, L, L
-## 18                                                                                           Denmark, Norway, M, M
-## 19                                                                                                  United Kingdom
-## 20                      Malta, Montenegro, San Marino, Slovenia, Spain, Switzerland, Vatican, M, M, L, NA, M, L, L
-## 21                                                              Montenegro, Macedonia, Republic of Serbia, L, L, L
-## 22                                                                             Lithuania, Russia, Sweden, NA, L, M
-## 23                                                                                                  Switzerland, L
-## 24                                                                                Poland, Russia, Sweden, L, NA, M
-## 25                                                                                           Republic of Serbia, L
-## 26                                                                                          Romania, Ukraine, L, L
-## 27                                                                                           Republic of Serbia, L
-## 28                                                                                               United Kingdom, M
-## 29                                                                       Russia, Sweden, United Kingdom, NA, NA, M
-## 30                                                                  Russia, Slovakia, Sweden, Ukraine, NA, L, M, L
-## 31                                                                                                           Spain
-## 32                                                                                                      Romania, L
-## 33                                                                   Russia, Republic of Serbia, Ukraine, M, L, NA
-## 34                                                                                          Sweden, Ukraine, M, NA
-## 35                                                                                                      Ukraine, L</code></pre>
-<pre class="r"><code>json %&gt;% slice(1)  %&gt;% select(neighbours) %&gt;% 
-    first()</code></pre>
-<pre><code>## [[1]]
-##    neighbour type
-## 1     Greece &lt;NA&gt;
-## 2      Italy    M
-## 3 Montenegro &lt;NA&gt;
-## 4  Macedonia    L
-## 5     Kosovo    L</code></pre>
+## 3                                                                             Azerbaijan, Georgia, Turkey, L, L, L
+## 4  Czech Republic, Germany, Hungary, Italy, Liechtenstein, Slovakia, Slovenia, Switzerland, L, L, L, L, L, L, L, L
+## 5                                                                 Georgia, Kazakhstan, Russia, Turkey, L, M, NA, L
+## 6                                                        Latvia, Lithuania, Poland, Russia, Ukraine, L, L, L, L, L
+## 7                                        France, Germany, Luxembourg, Netherlands, United Kingdom, NA, L, L, NA, M
+## 8                                                                Croatia, Montenegro, Republic of Serbia, NA, L, L
+## 9                   Greece, Macedonia, Romania, Republic of Serbia, Turkey, Russia, Ukraine, L, L, NA, L, NA, M, M
+## 10                                       Hungary, Italy, Montenegro, Republic of Serbia, Slovenia, L, M, NA, L, NA
+## 11                                                                                            Greece, Turkey, M, M
+## 12                                                                              Germany, Poland, Slovakia, L, L, L
+## 13                                     Germany, Iceland, Norway, Poland, Sweden, United Kingdom, NA, M, M, M, M, M
+## 14                                                                   Finland, Latvia, Russia, Sweden, M, NA, NA, M
+## 15                                                                               Norway, Russia, Sweden, L, NA, NA
+## 16                  Germany, Italy, Luxembourg, Monaco, Spain, Switzerland, United Kingdom, L, NA, L, NA, NA, L, M
+## 17                                                                                                  Russia, Turkey
+## 18                        Luxembourg, Netherlands, Poland, Sweden, Switzerland, United Kingdom, L, NA, NA, M, L, M
+## 19                                                                              Italy, Macedonia, Turkey, M, L, NA
+## 20                                         Romania, Republic of Serbia, Slovakia, Slovenia, Ukraine, L, L, L, L, L
+## 21                                                                                                       Norway, M
+## 22                                                                                                  United Kingdom
+## 23                      Malta, Montenegro, San Marino, Slovenia, Spain, Switzerland, Vatican, M, M, L, NA, M, L, L
+## 24                                                                                                          Russia
+## 25                                                                             Lithuania, Russia, Sweden, NA, L, M
+## 26                                                                                                  Switzerland, L
+## 27                                                                                Poland, Russia, Sweden, L, NA, M
+## 28                                                                                           Republic of Serbia, L
+## 29                                                                                          Romania, Ukraine, L, L
+## 30                                                                                           Republic of Serbia, L
+## 31                                                                                               United Kingdom, M
+## 32                                                                       Russia, Sweden, United Kingdom, NA, NA, M
+## 33                                                                  Russia, Slovakia, Sweden, Ukraine, NA, L, M, L
+## 34                                                                                                           Spain
+## 35                                                                                                      Romania, L
+## 36                                                                                          Russia, Ukraine, M, NA
+## 37                                                                                          Sweden, Ukraine, M, NA
+## 38                                                                                                      Ukraine, L</code></pre>
 <pre class="r"><code>countries &lt;- json %&gt;% select(country) %&gt;% pull()
 
 neighbours &lt;- tibble()
@@ -227,159 +857,21 @@ for (cnt in countries) {
 }
 
 d &lt;- neighbours %&gt;% select(country, neighbour)
-countries &lt;- union(neighbours %&gt;% select(country)  %&gt;% distinct() %&gt;% pull(),
+vertices &lt;- union(neighbours %&gt;% select(country)  %&gt;% distinct() %&gt;% pull(),
                    neighbours %&gt;% select(neighbour)  %&gt;% distinct() %&gt;% pull())
-igraph_network &lt;- graph_from_data_frame(d = d, vertices = countries, directed = F)</code></pre>
-<pre class="r"><code>plot(igraph_network)</code></pre>
-<p><img src="/2022/09/19/cartoon-map-of-europe/index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<pre class="r"><code>E(igraph_network)</code></pre>
-<pre><code>## + 115/115 edges from e56ba4e (vertex names):
-##  [1] Albania--Greece         Albania--Italy          Albania--Montenegro    
-##  [4] Albania--Macedonia      Albania--Kosovo         Andorra--France        
-##  [7] Andorra--Spain          Austria--Czech Republic Austria--Germany       
-## [10] Austria--Hungary        Austria--Italy          Austria--Liechtenstein 
-## [13] Austria--Slovakia       Austria--Slovenia       Austria--Switzerland   
-## [16] Belarus--Latvia         Belarus--Lithuania      Belarus--Poland        
-## [19] Belarus--Russia         Belarus--Ukraine        Belgium--France        
-## [22] Belgium--Germany        Belgium--Luxembourg     Belgium--Netherlands   
-## [25] Belgium--United Kingdom
-## + ... omitted several edges</code></pre>
-<pre class="r"><code>V(igraph_network)</code></pre>
-<pre><code>## + 46/46 vertices, named, from e56ba4e:
-##  [1] Albania                Andorra                Austria               
-##  [4] Belarus                Belgium                Bosnia and Herzegovina
-##  [7] Bulgaria               Croatia                Cyprus                
-## [10] Czech Republic         Denmark                Estonia               
-## [13] Finland                France                 Germany               
-## [16] Greece                 Hungary                Iceland               
-## [19] Ireland                Italy                  Kosovo                
-## [22] Latvia                 Liechtenstein          Lithuania             
-## [25] Macedonia              Moldova                Montenegro            
-## [28] Netherlands            Norway                 Poland                
-## + ... omitted several vertices</code></pre>
-<pre class="r"><code>E(igraph_network)</code></pre>
-<pre><code>## + 115/115 edges from e56ba4e (vertex names):
-##  [1] Albania--Greece         Albania--Italy          Albania--Montenegro    
-##  [4] Albania--Macedonia      Albania--Kosovo         Andorra--France        
-##  [7] Andorra--Spain          Austria--Czech Republic Austria--Germany       
-## [10] Austria--Hungary        Austria--Italy          Austria--Liechtenstein 
-## [13] Austria--Slovakia       Austria--Slovenia       Austria--Switzerland   
-## [16] Belarus--Latvia         Belarus--Lithuania      Belarus--Poland        
-## [19] Belarus--Russia         Belarus--Ukraine        Belgium--France        
-## [22] Belgium--Germany        Belgium--Luxembourg     Belgium--Netherlands   
-## [25] Belgium--United Kingdom
-## + ... omitted several edges</code></pre>
-<pre class="r"><code>igraph_network[]</code></pre>
-<pre><code>## 46 x 46 sparse Matrix of class &quot;dgCMatrix&quot;</code></pre>
-<pre><code>##    [[ suppressing 46 column names &#39;Albania&#39;, &#39;Andorra&#39;, &#39;Austria&#39; ... ]]</code></pre>
-<pre><code>##                                                                               
-## Albania                . . . . . . . . . . . . . . . 1 . . . 1 1 . . . 1 . 1 .
-## Andorra                . . . . . . . . . . . . . 1 . . . . . . . . . . . . . .
-## Austria                . . . . . . . . . 1 . . . . 1 . 1 . . 1 . . 1 . . . . .
-## Belarus                . . . . . . . . . . . . . . . . . . . . . 1 . 1 . . . .
-## Belgium                . . . . . . . . . . . . . 1 1 . . . . . . . . . . . . 1
-## Bosnia and Herzegovina . . . . . . . 1 . . . . . . . . . . . . . . . . . . 1 .
-## Bulgaria               . . . . . . . . . . . . . . . 1 . . . . . . . . 1 . . .
-## Croatia                . . . . . 1 . . . . . . . . . . 1 . . 1 . . . . . . 1 .
-## Cyprus                 . . . . . . . . . . . . . . . 1 . . . . . . . . . . . .
-## Czech Republic         . . 1 . . . . . . . . . . . 1 . . . . . . . . . . . . .
-## Denmark                . . . . . . . . . . . . . . 1 . . 1 . . . . . . . . . .
-## Estonia                . . . . . . . . . . . . 1 . . . . . . . . 1 . . . . . .
-## Finland                . . . . . . . . . . . 1 . . . . . . . . . . . . . . . .
-## France                 . 1 . . 1 . . . . . . . . . 1 . . . . 1 . . . . . . . .
-## Germany                . . 1 . 1 . . . . 1 1 . . 1 . . . . . . . . . . . . . 1
-## Greece                 1 . . . . . 1 . 1 . . . . . . . . . . 1 . . . . 1 . . .
-## Hungary                . . 1 . . . . 1 . . . . . . . . . . . . . . . . . . . .
-## Iceland                . . . . . . . . . . 1 . . . . . . . . . . . . . . . . .
-## Ireland                . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-## Italy                  1 . 1 . . . . 1 . . . . . 1 . 1 . . . . . . . . . . 1 .
-## Kosovo                 1 . . . . . . . . . . . . . . . . . . . . . . . 1 . 1 .
-## Latvia                 . . . 1 . . . . . . . 1 . . . . . . . . . . . 1 . . . .
-## Liechtenstein          . . 1 . . . . . . . . . . . . . . . . . . . . . . . . .
-## Lithuania              . . . 1 . . . . . . . . . . . . . . . . . 1 . . . . . .
-## Macedonia              1 . . . . . 1 . . . . . . . . 1 . . . . 1 . . . . . . .
-## Moldova                . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-## Montenegro             1 . . . . 1 . 1 . . . . . . . . . . . 1 1 . . . . . . .
-## Netherlands            . . . . 1 . . . . . . . . . 1 . . . . . . . . . . . . .
-## Norway                 . . . . . . . . . . 1 . 1 . . . . 1 . . . . . . . . . .
-## Poland                 . . . 1 . . . . . 1 1 . . . 1 . . . . . . . . 1 . . . .
-## Portugal               . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-## Republic of Serbia     . . . . . 1 1 1 . . . . . . . . 1 . . . 1 . . . 1 . 1 .
-## Romania                . . . . . . 1 . . . . . . . . . 1 . . . . . . . . 1 . .
-## Russia                 . . . 1 . . 1 . . . . 1 1 . . . . . . . . 1 . 1 . . . .
-## Slovakia               . . 1 . . . . . . 1 . . . . . . 1 . . . . . . . . . . .
-## Spain                  . 1 . . . . . . . . . . . 1 . . . . . 1 . . . . . . . .
-## Slovenia               . . 1 . . . . 1 . . . . . . . . 1 . . 1 . . . . . . . .
-## Switzerland            . . 1 . . . . . . . . . . 1 1 . . . . 1 . . 1 . . . . .
-## Ukraine                . . . 1 . . 1 . . . . . . . . . 1 . . . . . . . . 1 . .
-## Luxembourg             . . . . 1 . . . . . . . . 1 1 . . . . . . . . . . . . .
-## United Kingdom         . . . . 1 . . . . . 1 . . 1 1 . . . 1 . . . . . . . . 1
-## Sweden                 . . . . . . . . . . 1 1 1 . 1 . . . . . . 1 . 1 . . . .
-## Monaco                 . . . . . . . . . . . . . 1 . . . . . . . . . . . . . .
-## Malta                  . . . . . . . . . . . . . . . . . . . 1 . . . . . . . .
-## San Marino             . . . . . . . . . . . . . . . . . . . 1 . . . . . . . .
-## Vatican                . . . . . . . . . . . . . . . . . . . 1 . . . . . . . .
-##                                                           
-## Albania                . . . . . . . . . . . . . . . . . .
-## Andorra                . . . . . . . 1 . . . . . . . . . .
-## Austria                . . . . . . 1 . 1 1 . . . . . . . .
-## Belarus                . 1 . . . 1 . . . . 1 . . . . . . .
-## Belgium                . . . . . . . . . . . 1 1 . . . . .
-## Bosnia and Herzegovina . . . 1 . . . . . . . . . . . . . .
-## Bulgaria               . . . 1 1 1 . . . . 1 . . . . . . .
-## Croatia                . . . 1 . . . . 1 . . . . . . . . .
-## Cyprus                 . . . . . . . . . . . . . . . . . .
-## Czech Republic         . 1 . . . . 1 . . . . . . . . . . .
-## Denmark                1 1 . . . . . . . . . . 1 1 . . . .
-## Estonia                . . . . . 1 . . . . . . . 1 . . . .
-## Finland                1 . . . . 1 . . . . . . . 1 . . . .
-## France                 . . . . . . . 1 . 1 . 1 1 . 1 . . .
-## Germany                . 1 . . . . . . . 1 . 1 1 1 . . . .
-## Greece                 . . . . . . . . . . . . . . . . . .
-## Hungary                . . . 1 1 . 1 . 1 . 1 . . . . . . .
-## Iceland                1 . . . . . . . . . . . . . . . . .
-## Ireland                . . . . . . . . . . . . 1 . . . . .
-## Italy                  . . . . . . . 1 1 1 . . . . . 1 1 1
-## Kosovo                 . . . 1 . . . . . . . . . . . . . .
-## Latvia                 . . . . . 1 . . . . . . . 1 . . . .
-## Liechtenstein          . . . . . . . . . 1 . . . . . . . .
-## Lithuania              . 1 . . . 1 . . . . . . . 1 . . . .
-## Macedonia              . . . 1 . . . . . . . . . . . . . .
-## Moldova                . . . . 1 . . . . . 1 . . . . . . .
-## Montenegro             . . . 1 . . . . . . . . . . . . . .
-## Netherlands            . . . . . . . . . . . . 1 . . . . .
-## Norway                 . . . . . 1 . . . . . . 1 1 . . . .
-## Poland                 . . . . . 1 1 . . . 1 . . 1 . . . .
-## Portugal               . . . . . . . 1 . . . . . . . . . .
-## Republic of Serbia     . . . . 2 . . . . . . . . . . . . .
-## Romania                . . . 2 . 1 . . . . 1 . . . . . . .
-## Russia                 1 1 . . 1 . . . . . 1 . . 1 . . . .
-## Slovakia               . 1 . . . . . . . . 1 . . . . . . .
-## Spain                  . . 1 . . . . . . . . . . . . . . .
-## Slovenia               . . . . . . . . . . . . . . . . . .
-## Switzerland            . . . . . . . . . . . . . . . . . .
-## Ukraine                . 1 . . 1 1 1 . . . . . . . . . . .
-## Luxembourg             . . . . . . . . . . . . . . . . . .
-## United Kingdom         1 . . . . . . . . . . . . . . . . .
-## Sweden                 1 1 . . . 1 . . . . . . . . . . . .
-## Monaco                 . . . . . . . . . . . . . . . . . .
-## Malta                  . . . . . . . . . . . . . . . . . .
-## San Marino             . . . . . . . . . . . . . . . . . .
-## Vatican                . . . . . . . . . . . . . . . . . .</code></pre>
-<pre class="r"><code>diam &lt;- get_diameter(igraph_network, directed=T)
-diam</code></pre>
-<pre><code>## + 7/46 vertices, named, from e56ba4e:
-## [1] Moldova  Romania  Bulgaria Greece   Italy    Spain    Portugal</code></pre>
-<pre class="r"><code># visNetwork
-data &lt;- toVisNetworkData(igraph_network)
+igraph_network &lt;- graph_from_data_frame(d = d, vertices = vertices, directed = F)
+
+plot(igraph_network)</code></pre>
+<p><img src="/2022/09/19/cartoon-map-of-europe/index_files/figure-html/unnamed-chunk-1-4.png" width="672" /></p>
+<pre class="r"><code>data &lt;- toVisNetworkData(igraph_network)
 visNetwork(nodes = data$nodes, edges = data$edges, height = &quot;500px&quot;)</code></pre>
 <div id="htmlwidget-1" style="width:672px;height:500px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"nodes":{"id":["Albania","Andorra","Austria","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Macedonia","Moldova","Montenegro","Netherlands","Norway","Poland","Portugal","Republic of Serbia","Romania","Russia","Slovakia","Spain","Slovenia","Switzerland","Ukraine","Luxembourg","United Kingdom","Sweden","Monaco","Malta","San Marino","Vatican"],"label":["Albania","Andorra","Austria","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Macedonia","Moldova","Montenegro","Netherlands","Norway","Poland","Portugal","Republic of Serbia","Romania","Russia","Slovakia","Spain","Slovenia","Switzerland","Ukraine","Luxembourg","United Kingdom","Sweden","Monaco","Malta","San Marino","Vatican"]},"edges":{"from":["Albania","Albania","Albania","Albania","Albania","Andorra","Andorra","Austria","Austria","Austria","Austria","Austria","Austria","Austria","Austria","Belarus","Belarus","Belarus","Belarus","Belarus","Belgium","Belgium","Belgium","Belgium","Belgium","Bosnia and Herzegovina","Bosnia and Herzegovina","Bosnia and Herzegovina","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Croatia","Croatia","Croatia","Croatia","Croatia","Cyprus","Czech Republic","Czech Republic","Czech Republic","Denmark","Denmark","Denmark","Denmark","Denmark","Estonia","Estonia","Estonia","Estonia","Finland","Finland","Finland","France","France","France","France","France","France","France","Germany","Germany","Germany","Germany","Germany","Germany","Greece","Greece","Hungary","Hungary","Hungary","Hungary","Hungary","Denmark","Iceland","Ireland","Italy","Italy","Italy","Italy","Italy","Italy","Italy","Kosovo","Kosovo","Kosovo","Latvia","Latvia","Latvia","Liechtenstein","Lithuania","Lithuania","Lithuania","Macedonia","Moldova","Moldova","Montenegro","Netherlands","Norway","Norway","Norway","Poland","Poland","Poland","Poland","Portugal","Republic of Serbia","Romania","Republic of Serbia","Romania","Russia","Russia","Slovakia"],"to":["Greece","Italy","Montenegro","Macedonia","Kosovo","France","Spain","Czech Republic","Germany","Hungary","Italy","Liechtenstein","Slovakia","Slovenia","Switzerland","Latvia","Lithuania","Poland","Russia","Ukraine","France","Germany","Luxembourg","Netherlands","United Kingdom","Croatia","Montenegro","Republic of Serbia","Greece","Macedonia","Romania","Republic of Serbia","Russia","Ukraine","Hungary","Italy","Montenegro","Republic of Serbia","Slovenia","Greece","Germany","Poland","Slovakia","Germany","Norway","Poland","Sweden","United Kingdom","Finland","Latvia","Russia","Sweden","Norway","Russia","Sweden","Germany","Italy","Luxembourg","Monaco","Spain","Switzerland","United Kingdom","Luxembourg","Netherlands","Poland","Sweden","Switzerland","United Kingdom","Italy","Macedonia","Romania","Republic of Serbia","Slovakia","Slovenia","Ukraine","Iceland","Norway","United Kingdom","Malta","Montenegro","San Marino","Slovenia","Spain","Switzerland","Vatican","Montenegro","Macedonia","Republic of Serbia","Lithuania","Russia","Sweden","Switzerland","Poland","Russia","Sweden","Republic of Serbia","Romania","Ukraine","Republic of Serbia","United Kingdom","Russia","Sweden","United Kingdom","Russia","Slovakia","Sweden","Ukraine","Spain","Romania","Russia","Romania","Ukraine","Sweden","Ukraine","Ukraine"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false}},"groups":null,"width":null,"height":"500px","idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"nodes":{"id":["Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kazakhstan","Latvia","Liechtenstein","Lithuania","Macedonia","Moldova","Montenegro","Netherlands","Norway","Poland","Portugal","Republic of Serbia","Romania","Russia","Slovakia","Spain","Turkey","Slovenia","Switzerland","Ukraine","Luxembourg","United Kingdom","Sweden","Monaco","Malta","San Marino","Vatican"],"label":["Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kazakhstan","Latvia","Liechtenstein","Lithuania","Macedonia","Moldova","Montenegro","Netherlands","Norway","Poland","Portugal","Republic of Serbia","Romania","Russia","Slovakia","Spain","Turkey","Slovenia","Switzerland","Ukraine","Luxembourg","United Kingdom","Sweden","Monaco","Malta","San Marino","Vatican"]},"edges":{"from":["Albania","Albania","Albania","Albania","Albania","Andorra","Andorra","Armenia","Armenia","Armenia","Austria","Austria","Austria","Austria","Austria","Austria","Austria","Austria","Azerbaijan","Azerbaijan","Azerbaijan","Azerbaijan","Belarus","Belarus","Belarus","Belarus","Belarus","Belgium","Belgium","Belgium","Belgium","Belgium","Bosnia and Herzegovina","Bosnia and Herzegovina","Bosnia and Herzegovina","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Croatia","Croatia","Croatia","Croatia","Croatia","Cyprus","Cyprus","Czech Republic","Czech Republic","Czech Republic","Denmark","Denmark","Denmark","Denmark","Denmark","Denmark","Estonia","Estonia","Estonia","Estonia","Finland","Finland","Finland","France","France","France","France","France","France","France","Georgia","Georgia","Germany","Germany","Germany","Germany","Germany","Germany","Greece","Greece","Greece","Hungary","Hungary","Hungary","Hungary","Hungary","Iceland","Ireland","Italy","Italy","Italy","Italy","Italy","Italy","Italy","Kazakhstan","Latvia","Latvia","Latvia","Liechtenstein","Lithuania","Lithuania","Lithuania","Macedonia","Moldova","Moldova","Montenegro","Netherlands","Norway","Norway","Norway","Poland","Poland","Poland","Poland","Portugal","Republic of Serbia","Romania","Romania","Russia","Russia","Slovakia"],"to":["Greece","Italy","Montenegro","Macedonia","Republic of Serbia","France","Spain","Azerbaijan","Georgia","Turkey","Czech Republic","Germany","Hungary","Italy","Liechtenstein","Slovakia","Slovenia","Switzerland","Georgia","Kazakhstan","Russia","Turkey","Latvia","Lithuania","Poland","Russia","Ukraine","France","Germany","Luxembourg","Netherlands","United Kingdom","Croatia","Montenegro","Republic of Serbia","Greece","Macedonia","Romania","Republic of Serbia","Turkey","Russia","Ukraine","Hungary","Italy","Montenegro","Republic of Serbia","Slovenia","Greece","Turkey","Germany","Poland","Slovakia","Germany","Iceland","Norway","Poland","Sweden","United Kingdom","Finland","Latvia","Russia","Sweden","Norway","Russia","Sweden","Germany","Italy","Luxembourg","Monaco","Spain","Switzerland","United Kingdom","Russia","Turkey","Luxembourg","Netherlands","Poland","Sweden","Switzerland","United Kingdom","Italy","Macedonia","Turkey","Romania","Republic of Serbia","Slovakia","Slovenia","Ukraine","Norway","United Kingdom","Malta","Montenegro","San Marino","Slovenia","Spain","Switzerland","Vatican","Russia","Lithuania","Russia","Sweden","Switzerland","Poland","Russia","Sweden","Republic of Serbia","Romania","Ukraine","Republic of Serbia","United Kingdom","Russia","Sweden","United Kingdom","Russia","Slovakia","Sweden","Ukraine","Spain","Romania","Russia","Ukraine","Sweden","Ukraine","Ukraine"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false}},"groups":null,"width":null,"height":"500px","idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)"},"evals":[],"jsHooks":[]}</script>
 <pre class="r"><code>data$nodes &lt;- greedy_vertex_coloring(
   igraph_network, 
   heuristic = c(&quot;colored_neighbors&quot;)) %&gt;% 
   tibble(label = names(.),
-       col_id = .) %&gt;%
+         col_id = .) %&gt;%
   left_join(tibble(col_id = c(1:5),
                    color = c(&quot;#f0e442ff&quot;, &quot;#009e73ff&quot;, &quot;#d55e00ff&quot;, &quot;#0072b2ff&quot;, &quot;#44b9bfff&quot;))) %&gt;%
   select(label, color) %&gt;% mutate(id = label)</code></pre>
@@ -392,46 +884,19 @@ visNetwork(nodes = data$nodes, edges = data$edges, height = &quot;500px&quot;)</
 <pre class="r"><code>visNetwork(nodes = data$nodes, edges = data$edges, width = &quot;1000px&quot;, height = &quot;1000px&quot;) %&gt;% 
   visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)</code></pre>
 <div id="htmlwidget-2" style="width:1000px;height:1000px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"nodes":{"label":["Albania","Andorra","Austria","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Macedonia","Moldova","Montenegro","Netherlands","Norway","Poland","Portugal","Republic of Serbia","Romania","Russia","Slovakia","Spain","Slovenia","Switzerland","Ukraine","Luxembourg","United Kingdom","Sweden","Monaco","Malta","San Marino","Vatican"],"color":["#009e73ff","#f0e442ff","#d55e00ff","#44b9bfff","#0072b2ff","#f0e442ff","#d55e00ff","#d55e00ff","#f0e442ff","#009e73ff","#0072b2ff","#f0e442ff","#d55e00ff","#d55e00ff","#f0e442ff","#0072b2ff","#0072b2ff","#009e73ff","#f0e442ff","#f0e442ff","#d55e00ff","#d55e00ff","#f0e442ff","#f0e442ff","#f0e442ff","#d55e00ff","#0072b2ff","#d55e00ff","#f0e442ff","#d55e00ff","#f0e442ff","#009e73ff","#f0e442ff","#0072b2ff","#f0e442ff","#009e73ff","#009e73ff","#009e73ff","#009e73ff","#009e73ff","#009e73ff","#009e73ff","#f0e442ff","#009e73ff","#009e73ff","#009e73ff"],"id":["Albania","Andorra","Austria","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Macedonia","Moldova","Montenegro","Netherlands","Norway","Poland","Portugal","Republic of Serbia","Romania","Russia","Slovakia","Spain","Slovenia","Switzerland","Ukraine","Luxembourg","United Kingdom","Sweden","Monaco","Malta","San Marino","Vatican"]},"edges":{"to":["Greece","Italy","Montenegro","Macedonia","Kosovo","France","Spain","Czech Republic","Germany","Hungary","Italy","Liechtenstein","Slovakia","Slovenia","Switzerland","Latvia","Lithuania","Poland","Russia","Ukraine","France","Germany","Luxembourg","Netherlands","United Kingdom","Croatia","Montenegro","Republic of Serbia","Greece","Macedonia","Romania","Republic of Serbia","Russia","Ukraine","Hungary","Italy","Montenegro","Republic of Serbia","Slovenia","Greece","Germany","Poland","Slovakia","Germany","Norway","Poland","Sweden","United Kingdom","Finland","Latvia","Russia","Sweden","Norway","Russia","Sweden","Germany","Italy","Luxembourg","Monaco","Spain","Switzerland","United Kingdom","Luxembourg","Netherlands","Poland","Sweden","Switzerland","United Kingdom","Italy","Macedonia","Romania","Republic of Serbia","Slovakia","Slovenia","Ukraine","Denmark","Norway","United Kingdom","Malta","Montenegro","San Marino","Slovenia","Spain","Switzerland","Vatican","Montenegro","Macedonia","Republic of Serbia","Lithuania","Russia","Sweden","Switzerland","Poland","Russia","Sweden","Republic of Serbia","Romania","Ukraine","Republic of Serbia","United Kingdom","Russia","Sweden","United Kingdom","Russia","Slovakia","Sweden","Ukraine","Spain","Romania","Russia","Republic of Serbia","Ukraine","Sweden","Ukraine","Ukraine"],"type":["B","M","B","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","B","L","L","B","M","B","L","L","L","L","B","L","M","M","L","M","B","L","B","M","L","L","L","B","M","M","M","M","M","B","B","M","L","B","B","L","B","L","B","B","L","M","L","B","B","M","L","M","M","L","L","L","L","L","L","M","M","B","M","M","L","B","M","L","L","L","L","L","B","L","M","L","L","B","M","L","L","L","L","M","B","B","M","B","L","M","L","B","L","M","L","B","M","B","L"],"from":["Albania","Albania","Albania","Albania","Albania","Andorra","Andorra","Austria","Austria","Austria","Austria","Austria","Austria","Austria","Austria","Belarus","Belarus","Belarus","Belarus","Belarus","Belgium","Belgium","Belgium","Belgium","Belgium","Bosnia and Herzegovina","Bosnia and Herzegovina","Bosnia and Herzegovina","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Croatia","Croatia","Croatia","Croatia","Croatia","Cyprus","Czech Republic","Czech Republic","Czech Republic","Denmark","Denmark","Denmark","Denmark","Denmark","Estonia","Estonia","Estonia","Estonia","Finland","Finland","Finland","France","France","France","France","France","France","France","Germany","Germany","Germany","Germany","Germany","Germany","Greece","Greece","Hungary","Hungary","Hungary","Hungary","Hungary","Iceland","Iceland","Ireland","Italy","Italy","Italy","Italy","Italy","Italy","Italy","Kosovo","Kosovo","Kosovo","Latvia","Latvia","Latvia","Liechtenstein","Lithuania","Lithuania","Lithuania","Macedonia","Moldova","Moldova","Montenegro","Netherlands","Norway","Norway","Norway","Poland","Poland","Poland","Poland","Portugal","Republic of Serbia","Romania","Romania","Romania","Russia","Russia","Slovakia"],"color":["red","blue","red","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","red","green","green","red","blue","red","green","green","green","green","red","green","blue","blue","green","blue","red","green","red","blue","green","green","green","red","blue","blue","blue","blue","blue","red","red","blue","green","red","red","green","red","green","red","red","green","blue","green","red","red","blue","green","blue","blue","green","green","green","green","green","green","blue","blue","red","blue","blue","green","red","blue","green","green","green","green","green","red","green","blue","green","green","red","blue","green","green","green","green","blue","red","red","blue","red","green","blue","green","red","green","blue","green","red","blue","red","green"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false}},"groups":null,"width":"1000px","height":"1000px","idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
-</div>
-<div id="cartoon-map" class="section level2">
-<h2>Cartoon map</h2>
-<pre class="r"><code>inx_dxf &lt;- tempfile(&quot;inx_&quot;, fileext = c(&quot;.dxf&quot;))
-europe %&gt;%
-  st_geometry() %&gt;%
-  st_write(dsn = inx_dxf, driver =&quot;DXF&quot;)</code></pre>
-<pre><code>## Writing layer `inx_46d47e7473f9&#39; to data source 
-##   `C:\Users\jacek\AppData\Local\Temp\RtmpOKZXbD\inx_46d47e7473f9.dxf&#39; using driver `DXF&#39;
-## Writing 77 features with 0 fields and geometry type Multi Polygon.</code></pre>
-<pre class="r"><code># canvas 
-canvas &lt;- matrix(c(-23, 30,
-                   -23, 73,
-                   45, 73,
-                   45, 30,
-                   -23, 30),ncol=2, byrow=TRUE) %&gt;%
-  list() %&gt;% st_polygon() %&gt;% st_sfc() %&gt;% st_sf()
-europe &lt;- st_read(inx_dxf) %&gt;% select(geometry) %&gt;%
-  st_intersection(canvas)</code></pre>
-<pre><code>## Reading layer `entities&#39; from data source 
-##   `C:\Users\jacek\AppData\Local\Temp\RtmpOKZXbD\inx_46d47e7473f9.dxf&#39; 
-##   using driver `DXF&#39;
-## Simple feature collection with 433 features and 6 fields
-## Geometry type: POLYGON
-## Dimension:     XY
-## Bounding box:  xmin: -180 ymin: -58.49229 xmax: 180 ymax: 83.59961
-## CRS:           NA</code></pre>
-<pre class="r"><code># offset
-europe &lt;- europe %&gt;% 
-  mutate(geometry = st_buffer(geometry, dist = -.1)) %&gt;%
-  mutate(geometry = st_simplify(geometry)) %&gt;%
-  mutate(area = st_area(geometry)) %&gt;%
-  filter(area &gt; 0.1)
-
-europe %&gt;% ggplot() +
-  geom_sf() #+ theme_void()</code></pre>
-<p><img src="/2022/09/19/cartoon-map-of-europe/index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<pre class="r"><code># write svg
-#europe %&gt;% inx_sf2svg() %&gt;% inx_write(&quot;/cartoon/europe.svg&quot;)</code></pre>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"nodes":{"label":["Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kazakhstan","Latvia","Liechtenstein","Lithuania","Macedonia","Moldova","Montenegro","Netherlands","Norway","Poland","Portugal","Republic of Serbia","Romania","Russia","Slovakia","Spain","Turkey","Slovenia","Switzerland","Ukraine","Luxembourg","United Kingdom","Sweden","Monaco","Malta","San Marino","Vatican"],"color":["#f0e442ff","#d55e00ff","#0072b2ff","#f0e442ff","#d55e00ff","#009e73ff","#d55e00ff","#d55e00ff","#d55e00ff","#f0e442ff","#009e73ff","#44b9bfff","#f0e442ff","#0072b2ff","#d55e00ff","#f0e442ff","#009e73ff","#0072b2ff","#0072b2ff","#d55e00ff","#009e73ff","#f0e442ff","#d55e00ff","#009e73ff","#d55e00ff","#d55e00ff","#0072b2ff","#009e73ff","#f0e442ff","#009e73ff","#f0e442ff","#0072b2ff","#d55e00ff","#f0e442ff","#0072b2ff","#009e73ff","#f0e442ff","#009e73ff","#009e73ff","#f0e442ff","#009e73ff","#009e73ff","#0072b2ff","#009e73ff","#009e73ff","#009e73ff","#009e73ff","#f0e442ff","#f0e442ff","#f0e442ff"],"id":["Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kazakhstan","Latvia","Liechtenstein","Lithuania","Macedonia","Moldova","Montenegro","Netherlands","Norway","Poland","Portugal","Republic of Serbia","Romania","Russia","Slovakia","Spain","Turkey","Slovenia","Switzerland","Ukraine","Luxembourg","United Kingdom","Sweden","Monaco","Malta","San Marino","Vatican"]},"edges":{"to":["Greece","Italy","Montenegro","Macedonia","Republic of Serbia","France","Spain","Azerbaijan","Georgia","Turkey","Czech Republic","Germany","Hungary","Italy","Liechtenstein","Slovakia","Slovenia","Switzerland","Georgia","Kazakhstan","Russia","Turkey","Latvia","Lithuania","Poland","Russia","Ukraine","France","Germany","Luxembourg","Netherlands","United Kingdom","Croatia","Montenegro","Republic of Serbia","Greece","Macedonia","Romania","Republic of Serbia","Turkey","Russia","Ukraine","Hungary","Italy","Montenegro","Republic of Serbia","Slovenia","Greece","Turkey","Germany","Poland","Slovakia","Germany","Iceland","Norway","Poland","Sweden","United Kingdom","Finland","Latvia","Russia","Sweden","Norway","Russia","Sweden","Germany","Italy","Luxembourg","Monaco","Spain","Switzerland","United Kingdom","Russia","Turkey","Luxembourg","Netherlands","Poland","Sweden","Switzerland","United Kingdom","Italy","Macedonia","Turkey","Romania","Republic of Serbia","Slovakia","Slovenia","Ukraine","Norway","United Kingdom","Malta","Montenegro","San Marino","Slovenia","Spain","Switzerland","Vatican","Russia","Lithuania","Russia","Sweden","Switzerland","Poland","Russia","Sweden","Republic of Serbia","Romania","Ukraine","Republic of Serbia","United Kingdom","Russia","Sweden","United Kingdom","Russia","Slovakia","Sweden","Ukraine","Spain","Romania","Russia","Ukraine","Sweden","Ukraine","Ukraine"],"type":["B","M","B","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","M","B","L","L","L","L","L","L","B","L","L","B","M","B","L","L","L","L","B","L","B","M","M","L","M","B","L","B","M","M","L","L","L","B","M","M","M","M","M","M","B","B","M","L","B","B","L","B","L","B","B","L","M","B","B","L","B","B","M","L","M","M","L","B","L","L","L","L","L","M","B","M","M","L","B","M","L","L","B","B","L","M","L","L","B","M","L","L","L","L","M","B","B","M","B","L","M","L","B","L","M","B","M","B","L"],"from":["Albania","Albania","Albania","Albania","Albania","Andorra","Andorra","Armenia","Armenia","Armenia","Austria","Austria","Austria","Austria","Austria","Austria","Austria","Austria","Azerbaijan","Azerbaijan","Azerbaijan","Azerbaijan","Belarus","Belarus","Belarus","Belarus","Belarus","Belgium","Belgium","Belgium","Belgium","Belgium","Bosnia and Herzegovina","Bosnia and Herzegovina","Bosnia and Herzegovina","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Bulgaria","Croatia","Croatia","Croatia","Croatia","Croatia","Cyprus","Cyprus","Czech Republic","Czech Republic","Czech Republic","Denmark","Denmark","Denmark","Denmark","Denmark","Denmark","Estonia","Estonia","Estonia","Estonia","Finland","Finland","Finland","France","France","France","France","France","France","France","Georgia","Georgia","Germany","Germany","Germany","Germany","Germany","Germany","Greece","Greece","Greece","Hungary","Hungary","Hungary","Hungary","Hungary","Iceland","Ireland","Italy","Italy","Italy","Italy","Italy","Italy","Italy","Kazakhstan","Latvia","Latvia","Latvia","Liechtenstein","Lithuania","Lithuania","Lithuania","Macedonia","Moldova","Moldova","Montenegro","Netherlands","Norway","Norway","Norway","Poland","Poland","Poland","Poland","Portugal","Republic of Serbia","Romania","Romania","Russia","Russia","Slovakia"],"color":["red","blue","red","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","blue","red","green","green","green","green","green","green","red","green","green","red","blue","red","green","green","green","green","red","green","red","blue","blue","green","blue","red","green","red","blue","blue","green","green","green","red","blue","blue","blue","blue","blue","blue","red","red","blue","green","red","red","green","red","green","red","red","green","blue","red","red","green","red","red","blue","green","blue","blue","green","red","green","green","green","green","green","blue","red","blue","blue","green","red","blue","green","green","red","red","green","blue","green","green","red","blue","green","green","green","green","blue","red","red","blue","red","green","blue","green","red","green","blue","red","blue","red","green"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false}},"groups":null,"width":"1000px","height":"1000px","idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code># --------------
+# colour map
+europe &lt;- result %&gt;% left_join(data$nodes %&gt;% select(c(&#39;color&#39;, &#39;id&#39;)) %&gt;% rename(sovereignt = id))</code></pre>
+<pre><code>## Joining, by = &quot;sovereignt&quot;</code></pre>
+<pre class="r"><code>europe %&gt;% ggplot() +
+  geom_sf(aes(fill = color)) +
+  scale_fill_identity() +
+  theme_void()</code></pre>
+<p><img src="/2022/09/19/cartoon-map-of-europe/index_files/figure-html/unnamed-chunk-1-7.png" width="672" /></p>
+<pre class="r"><code>ggsave(file = &quot;R_Drawn_Map_of_Europe.svg&quot;)</code></pre>
+<pre><code>## Saving 7 x 5 in image</code></pre>
+<p><img src="R_Drawn_Map_of_Europe.svg" /></p>
 </div>
 
     </div>
