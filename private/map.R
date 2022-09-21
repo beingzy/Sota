@@ -14,11 +14,13 @@ sovereignties <- c(
   "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Vatican")
 
 europe <- ne_countries(scale = "medium", returnclass = "sf", sovereignty = sovereignties) %>%
-  select(sovereignt) #%>% mutate(sovereignt = ifelse(sovereignt == "Kosovo", "Republic of Serbia", sovereignt))
+  select(sovereignt)
 # natural map
 europe %>% ggplot() +
   geom_sf() +
   coord_sf(xlim = c(-23, 40), ylim = c(33, 70)) 
+
+# to make negative offset we need to drop Coordinate System and clear the geometries
 
 result <- st_sfc() %>% st_sf()
 for (sovereignty in sovereignties) {
@@ -31,7 +33,14 @@ for (sovereignty in sovereignties) {
   result <- result %>% bind_rows(row)
 }
 
-canvas <- matrix(c(-23, 33,
+row <- result %>% filter(sovereignt %in% c("Kosovo", "Republic of Serbia")) %>% st_union() %>%
+  st_cast("LINESTRING") %>% nth(1) %>% 
+  st_polygonize() %>% first() %>% st_sfc() %>% st_sf() %>% mutate(sovereignt = "Republic of Serbia") 
+
+result <- result %>% filter(!sovereignt %in% c("Kosovo", "Republic of Serbia")) %>% bind_rows(row)
+
+# we crop the map
+row <- matrix(c(-23, 33,
                    -23, 71,
                    50, 71,
                    50, 33,
@@ -39,17 +48,19 @@ canvas <- matrix(c(-23, 33,
   list() %>% st_polygon() %>% st_sfc() %>% st_sf()
 
 result <- result %>%
-  st_intersection(canvas)
+  st_intersection(row)
 
-result <- result %>% 
-  mutate(geometry = st_buffer(geometry, dist = -.1)) %>%
+result %>% 
+  ggplot() +
+  geom_sf() 
+
+# try buffer
+result <- result %>% mutate(geometry = st_buffer(geometry, dist = -.1)) %>%
   mutate(geometry = st_simplify(geometry)) %>%
-  mutate(area = st_area(geometry)) #%>%  filter(area > 0.1)
-
+  mutate(area = st_area(geometry)) %>%
+  filter(area > 0.1) 
 result %>% ggplot() +
-  geom_sf()  
-# canvas 
-setdiff(sovereignties, result$sovereignt)
+  geom_sf() 
 
 # network
 sovereignties
@@ -69,9 +80,9 @@ for (cnt in countries) {
 }
 
 d <- neighbours %>% select(country, neighbour)
-countries <- union(neighbours %>% select(country)  %>% distinct() %>% pull(),
+vertices <- union(neighbours %>% select(country)  %>% distinct() %>% pull(),
                    neighbours %>% select(neighbour)  %>% distinct() %>% pull())
-igraph_network <- graph_from_data_frame(d = d, vertices = countries, directed = F)
+igraph_network <- graph_from_data_frame(d = d, vertices = vertices, directed = F)
 
 plot(igraph_network)
 
@@ -96,3 +107,15 @@ data$edges <- neighbours %>% rename(from = country, to = neighbour) %>%
 visNetwork(nodes = data$nodes, edges = data$edges, width = "1000px", height = "1000px") %>% 
   visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
 
+
+
+# --------------
+# colour map
+europe <- result %>% left_join(data$nodes %>% select(c('color', 'id')) %>% rename(sovereignt = id))
+
+europe %>% ggplot() +
+  geom_sf(aes(fill = color)) +
+  scale_fill_identity() +
+  theme_void()
+
+ggsave(file = "./content/post/2022-09-19-europe-map/europe.svg")
